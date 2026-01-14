@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.title}">ExcelR Blog App</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background-color: #111;
+        }
+        .navbar a, .navbar-brand {
+            color: white !important;
+        }
+
+        /* NAVBAR LINKS HOVER EFFECT */
+        .navbar .nav-link {
+            position: relative;
+            margin-left: 10px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            transition: all 0.25s ease-in-out;
+        }
+
+        .navbar .nav-link:hover {
+            background: linear-gradient(135deg, #90EE90, #6bdc87);
+            color: #000 !important;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 12px rgba(144, 238, 144, 0.6);
+        }
+
+        /* POST BOX */
+        .post-box {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .post-box h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .post-box p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* SEARCH BOX */
+        .search-box {
+            background-color: #ADD8E6;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 3px rgba(0,0,0,0.1);
+        }
+
+        /* COMMENTS */
+        .comment {
+            margin-bottom: 20px;
+        }
+        .comment strong {
+            color: #007bff;
+        }
+
+        /* FORM */
+        form {
+            margin-top: 30px;
+            background-color: pink;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.05);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        /* SUBMIT BUTTON */
+        .submit-btn {
+            display: block;
+            margin: 25px auto 0;
+            background: linear-gradient(135deg,#90EE90, #6bdc87);
+            color: #000;
+            border: none;
+            padding: 12px 26px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.25s ease-in-out;
+            box-shadow: 0 6px 14px rgba(0, 123, 255, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #6bdc87, #42c76a);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 22px rgba(0, 123, 255, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* FOOTER */
+        .footer {
+            background-color: #111;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .footer a {
+            color: #00f;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="#">ExcelR Blog App</a>
+        <div class="navbar-nav">
+            <a class="nav-link" th:href="@{/dashboard}">🏠 Home</a>
+            <a class="nav-link" th:href="@{/register}">📝 Register</a>
+            <a class="nav-link" th:href="@{/login}">🔐 Login</a>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="container mt-4">
+    <div class="row">
+
+        <!-- LEFT: POST + COMMENTS -->
+        <div class="col-md-9">
+
+            <!-- POST TITLE & CONTENT IN DIV -->
+            <div class="post-box">
+                <h1 th:text="${post.title}">Post Title</h1>
+                <p th:text="${post.content}">Post Content</p>
+            </div>
+
+            <h3>✍ Comments</h3>
+            <div th:each="comment : ${comments}" class="comment">
+                <strong th:text="${comment.name}">User</strong> says:
+                <p th:text="${comment.content}">Comment Content</p>
+            </div>
+
+            <!-- ADD COMMENT FORM -->
+            <div th:if="${user != null and user.id != post.user.id}">
+                <h4>Add a Comment</h4>
+                <form th:action="@{/comment/{postId}(postId=${post.id})}" 
+                      th:object="${commentObj}" method="post">
+
+                    <label>Name:</label>
+                    <input type="text" th:field="*{name}" required placeholder="Enter your name" />
+
+                    <label>Email:</label>
+                    <input type="email" th:field="*{email}" required placeholder="Enter valid email" />
+
+                    <label>Comment:</label>
+                    <textarea th:field="*{content}" required></textarea>
+
+                    <button type="submit" class="submit-btn">🚀 Submit</button>
+                </form>
+            </div>
+
+            <!-- AUTHOR CANNOT COMMENT -->
+            <div th:if="${user != null and user.id == post.user.id}">
+                <p>⚠ You cannot comment on your own post.</p>
+            </div>
+
+        </div>
+
+        <!-- RIGHT: SEARCH BOX -->
+        <div class="col-md-3">
+            <div class="search-box">
+                <h5>🔍 Blog Search</h5>
+                <form th:action="@{/search}" method="get">
+                    <input type="text" name="query" class="form-control mb-2"
+                           placeholder="Search blogs..." th:value="${query}">
+                    <button type="submit" class="btn btn-primary btn-block">Search</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <div class="container">
+        Copyright © 2023 <a href="#">ExcelR</a>. All rights reserved.
+    </div>
+</div>
+
+</body>
+</html>

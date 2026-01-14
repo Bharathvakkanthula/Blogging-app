@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color:lightgoldenrodyellow;
+        }
+
+		.logo img{
+			
+		           margin-left: 690px;
+		           margin-top: 2px;
+				height: 70px;
+		       }
+
+		       .logo h1{
+		           margin-left: 600px;
+		           margin-top: 0px;
+		       }
+			.logo p{
+			            margin-left: 580px;
+			        }
+
+        form {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 400px;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+			transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+			transform: translateY(-2px);  
+			   box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+	<div class="logo">
+			       <img src="/images/remlogo.png">
+				   <h1>Create Your Account</h1>			       
+				<p>Join us today! Fill in your details to get started.</p>
+			   </div>
+    
+
+    <form th:action="@{/register}" th:object="${user}" method="post">
+		
+        <label>First Name:</label>
+        <input type="text" th:field="*{fname}"  placeholder="enter your first name" />
+
+        <label>Last Name:</label>
+        <input type="text" th:field="*{lname}" placeholder="enter your last name" required />
+
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" placeholder="enter your email" required />
+        
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        
+
+        <label>Password:</label>
+        <input type="password" th:field="*{pwd}" placeholder="set password" required />
+
+        <div style="text-align: center;">
+            <button type="submit">Register</button>
+        </div>
+    </form>
+
+    <div class="link">
+        Already registered? <a href="/login">Login</a>
+    </div>
+</body>
+</html>

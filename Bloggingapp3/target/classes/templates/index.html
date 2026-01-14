@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ExcelR Blog App</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        /* HEADER */
+        .navbar {
+            background-color:black;
+        }
+        .navbar a, .navbar-brand {
+            color: white !important;
+        }
+		.navbar .nav-link {
+		            transition: all 0.3s ease;
+		            padding: 6px 12px;
+		            border-radius: 5px;
+		        }
+
+		        .navbar .nav-link:hover {
+		            background-color: #f1c40f;  /* Yellow hover */
+		            color: #111 !important;     /* Dark text */
+		            text-decoration: none;
+		        }
+				
+
+				
+
+        /* CONTENT */
+        .card {
+            margin-bottom: 20px;
+			background-color: lightblue;
+			border-radius: 14px;
+			border:solid 2px black;
+			transition: transform 0.6s ease, box-shadow 0.3s ease;
+			
+			
+        }
+		.card:hover {
+		    transform: translateY(-5px);
+		    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+		}
+		.search-box {
+			            background-color: white;
+			            padding: 15px;
+			            border-radius: 5px;
+			            box-shadow: 0 0 3px rgba(0,0,0,0.1);
+						border: solid 4px black;
+			        }
+
+        /* FOOTER */
+        .footer {
+            background-color: #111;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            margin-top: 30px;
+            width: 100%;
+        }
+        .footer a {
+            color: #00f;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#" >ExcelR Blog App</a>
+        <div class="navbar-nav">
+            <a class="nav-link ml-3" th:href="@{/dashboard}">🏠 Home</a>
+            <a class="nav-link ml-3" th:href="@{/register}">Register</a>
+            <a class="nav-link ml-3" th:href="@{/login}">Login</a>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="container mt-4">
+    <div class="row">
+
+        <!-- Blog Posts List -->
+        <div class="col-md-9">
+            <div th:each="post : ${posts}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>
+                            <a th:href="@{'/view/' + ${post.id}}" class="text-primary" th:text="${post.title}">Post Title</a>
+                        </h5>
+                        <small class="text-muted" th:text="${#temporals.format(post.createdOn, 'dd MMM yyyy')}">Date</small>
+                        <p>
+                            <span th:utext="${#strings.abbreviate(post.content, 100)}">Post content...</span>
+                            <a th:href="@{'/view/' + ${post.id}}">Read more</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Form -->
+        <div class="col-md-3">
+            <div class="search-box">
+                <h5>Blog Search</h5>
+                <form th:action="@{/search}" method="get">
+                    <input type="text" name="query" class="form-control mb-2" placeholder="Search blogs..." th:value="${query}">
+                    <button type="submit" class="btn btn-primary btn-block">🔍 Search</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <div class="container">
+        Copyright © 2023 <a href="#">ExcelR</a>. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>
